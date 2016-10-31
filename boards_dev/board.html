@@ -1,0 +1,29 @@
+<html>
+<head>
+  <title>Post-It Board</title>
+
+  <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css">
+  <meta name="tipo_contenido"  content="text/html;" http-equiv="content-type" charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li id="icon"><img class="btn_hide" src="x-btn.png" width="20" height="20"></li>
+    </ul>
+    <div id="div_toggle">
+      <ul>
+        <li><a href="#" onclick="newBoard();">Nuevo Tablero</a></li><hr>
+      </ul>
+    </div>
+    <br clear="all">
+  </nav>
+
+  <div id="board">
+  </div>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+  <script src="post-it.js"></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+#menu{
+  background-color: black;
+}
+
+#clear {
+  clear: left;
+  height: 1px;
+  margin-top: -1px;
+ }
+body nav{
+  top: 0px;
+  bottom: 0px;
+  position: fixed;
+  height: 100%;
+  width: 150px;
+  background: black;
+  border-right: 2px;
+}
+nav ul{
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  /* background-color: #f1f1f1;  */
+}
+
+nav li {
+  height: 30px;
+  margin-top: 8px;
+}
+
+
+nav a{
+  padding: 0px;
+  color: white;
+  /*padding: 8px 0 8px 16px;*/
+  text-decoration: none;
+  margin-left: 10px;
+  margin-top: 15px;
+}
+/* Change the link color on hover */
+nav li a:hover {
+  color: gray;
+  font-size: 1.1em;
+  
+}
+nav hr{
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(225,225,225, 0), rgba(225,225,225, 0.75), rgba(225,225,225, 0));
+}
+
+
+.btn_hide, .btn_show{
+  border: none;
+  background: transparent;
+  float: right;
+  cursor: pointer;
+  margin-right: 5px;
+}
