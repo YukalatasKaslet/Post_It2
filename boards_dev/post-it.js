@@ -4,7 +4,7 @@ var post_its = [];
 var boards   = [];
 var menu_count  = 1;
 var board_num = 0;
-var i = 0;
+var postit_num = 0;
 //<div class='Board_close'><a onclick='Close(this)' data-board='"+ this.b_id +"' >X</a>
 //<div id='#clear'></div>
 
@@ -17,17 +17,17 @@ $(function() {
 
 
 //**********CLASE TABLERO********************
-var Board = function( selector, name ) {
+var Board = function( selector, name, board_num ) {
       console.log("*** Se creo un tablero ****");
-  board_num++;
 
   this.body_id      = "BB" + board_num;
   this.header_id    = "BH" + board_num;
-  this.b_name       = new String(name);
   this.color_header = colors_2[Math.floor((Math.random() * 4))]
   this.color_body   = colors_1[Math.floor((Math.random() * 4))]
-  this.b_id         = '#'+ name;
-  this.b_body       = "<div id='"+ this.b_name +"' class='board'><div class='board_header' id='"+ this.header_id +"'><p>.::|  "+ this.b_name +"  |::.</p></div><div class='board_body' id='"+ this.body_id +"'></div></div>";
+  this.b_name       = new String(name);
+  this.b_num        = board_num;
+  this.b_id         = '#'+ board_num;
+  this.b_body       = "<div id='"+ this.b_num +"' class='board'><div class='board_header' id='"+ this.header_id +"'><p>.::|  "+ this.b_name +"  |::.</p></div><div class='board_body' id='"+ this.body_id +"'></div></div>";
       console.log(name);
       console.log(this.body_id);
       console.log(this.header_id);
@@ -43,7 +43,7 @@ var Board = function( selector, name ) {
   var $board        = $(this.b_id);
 
 
-  function initialize(id_board, name, color_header, color_body, b_body, header_id, body_id) {
+  function initialize(id_board, name, color_header, color_body, b_body, header_id, body_id, b_num) {
     hideBoards();
     console.log("initialize");
 
@@ -77,13 +77,12 @@ var Board = function( selector, name ) {
 
       if (empty_place == true) {
         removeMasterId(id_board);
-        post_its.push( new PostIt(i, x, event.pageY, name) );
+        post_its.push( new PostIt(x, event.pageY, b_num) );
         console.log(".::post_its[index_numbers]::.");
-        var k = post_its.findIndexPostItByData(name + ".p" + i);
+        var k = post_its.findIndexPostItByData(b_num + ".p" + postit_num);
         console.log(post_its[k]);
         $(this).append(post_its[k].p_body);
         doItDraggable(id_board);
-        i++;
         postItClick(id_board);
       } else {
         alert("LUGAR OCUPADO");
@@ -93,21 +92,23 @@ var Board = function( selector, name ) {
 
   };//function initialize()
 
-  initialize(this.b_id, this.b_name, this.color_header, this.color_body, this.b_body, this.header_id, this.body_id);
+  initialize(this.b_id, this.b_name, this.color_header, this.color_body, this.b_body, this.header_id, this.body_id, this.b_num);
 };//end Class Board
 
 
 
 
 //**********CLASE PostIt********************
-var PostIt = function(num, posX, posY, board_name) {
+var PostIt = function( posX, posY, b_num) {
   // Aquí va el código relacionado con un post-it
-  this.num = num;
+  postit_num++;
+
+  this.num = postit_num;
   this.positionX = new Number(posX);
   this.positionY = new Number(posY);
-  this.board_name= board_name;
-  this.board = "#"+ board_name;
-  this.postItid = this.board_name+".p"+this.num;
+  this.board_num = b_num;
+  this.board = "#"+ b_num;
+  this.postItid = this.board_num +".p"+this.num;
   this.p_body = "<div id='Master' class='post-it' data-post_it='"+ this.postItid +"' style='left: "+ this.positionX +"px; top: "+ this.positionY +"px;'><div class='header'><div class='close'><a onclick='functionClose(this)'>X</a></div></div><div class='content' contentEditable='true'>...Elemento "+ this.num +"...id: "+ this.postItid +"</div></div>" 
   console.log("*Se creo un post-it*");
 };
@@ -123,7 +124,7 @@ function removeMasterId(id_board){
         console.log(jQuery.type(b));
         console.log(b);
     var i = post_its.findIndexPostItByData(d);
-    if(post_its[i].board_name == b[0]){
+    if(post_its[i].b_num == b[0]){
       this.removeAttribute('id');
     }
 
@@ -137,22 +138,23 @@ function addMasterId(id_board, id_postIt){
     var d = this.getAttribute('data-post_it');
     var b = d.split(".");
     var i = post_its.findIndexPostItByData(d);
-    if(post_its[i].board_name == b[0]){
-      j.push(i);
+    if(post_its[i].board_num == b[0]){ 
+      //j.push(i);
+      this.setAttribute('id', "Master"); 
     }
     //this.removeAttribute('id');
   });
   
-  for(l = 0; l < j.length; l++){
-    for(k = 0; k < post_its.length; k++){
-      if(k == j[l]){
-        if(post_its[j[l]].postItid == id_postIt){
-          $(post_its[j[l]]).attr('id', 'Master');
-          $(post_its[j[l]]).insertAfter(id_board +" .post-it:last");
-        }
-      }
-    }
-  }
+  // for(l = 0; l < j.length; l++){
+  //   for(k = 0; k < post_its.length; k++){
+  //     if(k == j[l]){
+  //       if(post_its[k].postItid == id_postIt){
+  //         $(post_its[k]).attr('id', 'Master');
+  //         $(post_its[k]).insertAfter(id_board +" .post-it:last");
+  //       }
+  //     }
+  //   }
+  // }
   // this.setAttribute('id', 'Master');
   // $(this).insertAfter(id_board +" .post-it:last");
 }
@@ -340,8 +342,9 @@ function menu_control(){
 function newBoard(){
   //new Board('#board');
   var name_board = prompt("¿Cuál es el título del tablero?", "Ingresa un título");
-  boards.push( new Board('#board', name_board) );
-  $("#div_toggle ul").append("<li class='tableros'><a href=\"#\" onclick=\"showBoard(this);\" data-board=\""+ name_board +"\">"+ name_board +"</a></li><hr>");
+  board_num++;
+  boards.push( new Board('#board', name_board, board_num) );
+  $("#div_toggle ul").append("<li class='tableros'><a href=\"#\" onclick=\"showBoard(this);\" data-board=\""+ board_num +"\">"+ name_board +"</a></li><hr>");
 }
 
 function navChangeColor(color1, color2){
@@ -353,8 +356,8 @@ function navChangeColor(color1, color2){
 function showBoard(e){
   var obj   = e;
   hideBoards();
-  var board_name = obj.getAttribute("data-board");
-  var index      = boards.findIndexBoardByName(board_name);
+  var board_num = obj.getAttribute("data-board");
+  var index      = boards.findIndexBoardByNum(board_num);
   console.log("showBoards");
   var board = boards[index].b_id;
   $(board).show();
@@ -378,7 +381,7 @@ function Close(e){
 
 
 
-Array.prototype.findIndexBoardByName || (Array.prototype.findIndexBoardByName = function(d,e) {
+Array.prototype.findIndexBoardByNum || (Array.prototype.findIndexBoardByNum = function(d,e) {
     var a;
     if (null == this) throw new TypeError('"this" is null or not defined');
     var c = Object(this),
@@ -388,7 +391,7 @@ Array.prototype.findIndexBoardByName || (Array.prototype.findIndexBoardByName = 
     Infinity === Math.abs(a) && (a = 0);
     if (a >= b) return -1;
     for (a = Math.max(0 <= a ? a : b - Math.abs(a), 0); a < b;) {
-        if (a in c && c[a].b_name == d) return a;
+        if (a in c && c[a].b_num == d) return a;
         a++
     }
     return -1
